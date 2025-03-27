@@ -11,22 +11,11 @@ def contact(request):
 
     if str(request.method) == 'POST':
         if form.is_valid():         #retorna TRUE se não tiver erro
-            nome = form.cleaned_data['nome']        #cleaned_data['nome'] onde o nome é o nome da variavel que está definido em core.forms
-            email = form.cleaned_data['email']
-            assunto = form.cleaned_data['assunto']
-            mensagem = form.cleaned_data['mensagem']
-
-            print(f'''Mensagem enviada!
-            nome: {nome}
-            email: {email}
-            assunto: {assunto}
-            mensagem: {mensagem}
-            ''')
+            form.send_mail()        #envia o email
             messages.success(request,'E-mail enviado com sucesso')
             form = Contactform()        #limpa o formulario apos tudo.
         else:
             messages.error(request,'Erro ao enviar o e-mail')
-
     context = {
         'formulario' : form
     }
