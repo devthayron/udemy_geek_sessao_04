@@ -19,7 +19,7 @@ class Contactform(forms.Form):
             subject='E-mail enviado pelo sistema Django',
             body=conteudo,
             from_email='contato@seudominio.com.br',
-            to=['contato@seudominio.com.br']
+            to=['contato@seudominio.com.br'],
             headers={'Reply-To': email},
         )
         mail.send()
