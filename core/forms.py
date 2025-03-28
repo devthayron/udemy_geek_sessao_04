@@ -1,5 +1,6 @@
 from django import forms
 from django.core.mail.message import EmailMessage
+from .models import Produto
 
 class Contactform(forms.Form):
     nome = forms.CharField(label='Nome', max_length=100)    #max_length ou min_length (maximo de caractere e o minimo)
@@ -23,3 +24,8 @@ class Contactform(forms.Form):
             headers={'Reply-To': email},
         )
         mail.send()
+
+class ProdutoModelForm(forms.ModelForm):
+    class Meta:
+        model = Produto
+        fields = ['nome','preco','estoque','imagem']
