@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .forms import Contactform, ProdutoModelForm
 from django.contrib import messages
 from .models import Produto
+
 
 def index(request):
 
@@ -13,7 +14,6 @@ def index(request):
 
 def contact(request):
     form = Contactform(request.POST or None)
-
     if str(request.method) == 'POST':
         if form.is_valid():         #retorna TRUE se não tiver erro
             form.send_mail()        #envia o email
@@ -29,20 +29,26 @@ def contact(request):
 
 
 def product(request):
-    if str(request.method) == 'POST':
-        form = ProdutoModelForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            
-            messages.success(request,'Produto salvo com sucesso. ')
-            form = ProdutoModelForm()
+    print(f'Usuario: {request.user}')   #verificar o usuario
+    if str(request.user) != 'AnonymousUser':
+        print(f'usuario logado')
+        if str(request.method) == 'POST':
+            form = ProdutoModelForm(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                
+                messages.success(request,'Produto salvo com sucesso. ')
+                form = ProdutoModelForm()
+            else:
+                messages.error(request,'Erro ao salvar o produto')
         else:
-            messages.error(request,'Erro ao salvar o produto')
+            form = ProdutoModelForm()
+        context = {
+                'form' : form
+            }
+        return render(request, 'product.html',context)
+
     else:
-        form = ProdutoModelForm()
-    context = {
-            'form' : form
-        }
-    return render(request, 'product.html',context)
+        return redirect('index')
 
 
